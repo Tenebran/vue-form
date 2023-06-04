@@ -9,17 +9,14 @@
     />
     <span>{{ props.query }}</span>
     <nav class="header__nav">
-      <a href="" class="header__page">Добавить</a>
-      <a href="" class="header__page">Корзина</a>
+      <span class="header__page" @click="setModal('m1', true)">Добавить</span>
+      <span class="header__page" @click="setModal('m1', true)">Корзина</span>
     </nav>
   </header>
 </template>
 
 <script setup>
-import { Modal } from 'usemodal-vue3'
-import { ref } from 'vue'
-let isVisible = ref(false)
-const props = defineProps(['modelValue'])
+const props = defineProps(['modelValue', 'setModal'])
 </script>
 
 <style lang="scss" scoped>
