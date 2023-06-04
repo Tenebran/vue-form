@@ -9,15 +9,16 @@
     />
     <span>{{ props.query }}</span>
     <nav class="header__nav">
-      <a href="" class="header__page">page</a>
-      <a href="" class="header__page">page</a>
-      <a href="" class="header__page">page</a>
-      <a href="" class="header__page">page</a>
+      <a href="" class="header__page">Добавить</a>
+      <a href="" class="header__page">Корзина</a>
     </nav>
   </header>
 </template>
 
 <script setup>
+import { Modal } from 'usemodal-vue3'
+import { ref } from 'vue'
+let isVisible = ref(false)
 const props = defineProps(['modelValue'])
 </script>
 
