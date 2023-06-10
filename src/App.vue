@@ -8,6 +8,7 @@ import { Modal, useModal } from 'usemodal-vue3'
 
 const products = ref({})
 const localStorageProducts = JSON.parse(localStorage.getItem('products'))
+console.log(localStorageProducts)
 if (!localStorageProducts) {
   onBeforeMount(async () => {
     products.value = (await axios.get(`/products`)).data
@@ -16,7 +17,10 @@ if (!localStorageProducts) {
 } else {
   products.value = localStorageProducts
 }
-
+const submitAddProduct = () => {
+  setModal('m1', false)
+  console.log('submit')
+}
 let modalVisible = reactive({})
 let modalVisible2 = reactive({})
 const query = ref('')
@@ -55,17 +59,19 @@ modalVisible2 = setModal('m2', false)
     name="m1"
     v-model:visible="modalVisible"
     :animation="true"
-    :closable="false"
     :draggable="true"
-    @onVisible="onVisible2"
-    @onUnVisible="onUnVisible"
+    title="Форма Добавление Товара"
     :okButton="{
-      onclick: okfn,
-      loading: true
+      onclick: () => submitAddProduct(),
+      loading: true,
+      text: 'Купить'
     }"
-    ><add-product></add-product>
+    :cancelButton="{
+      text: 'Отмена'
+    }"
+    ><add-product :submitAddProduct="submitAddProduct"></add-product>
   </Modal>
-
+  <div id="modals"></div>
   <Modal name="m2" v-model:visible="modalVisible2"> </Modal>
 </template>
 
