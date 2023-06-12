@@ -10,7 +10,7 @@
     <span>{{ props.query }}</span>
     <nav class="header__nav">
       <span class="header__page" @click="setModal('m1', true)">Добавить</span>
-      <span class="header__page" @click="setModal('m1', true)">Корзина</span>
+      <span class="header__page" @click="setModal('m2', true)">Корзина</span>
     </nav>
   </header>
 </template>

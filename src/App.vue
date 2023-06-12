@@ -20,7 +20,16 @@ const submitAddProduct = (newProduct) => {
   products.value.push(newProduct)
   localStorage.setItem('products', JSON.stringify(localStorageProducts))
   setModal('m1', false)
-  console.log('submit')
+  axios
+    .post('api/review', products, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => console.log(err))
 }
 let modalVisible = reactive({})
 let modalVisible2 = reactive({})
