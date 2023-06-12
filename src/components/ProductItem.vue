@@ -12,13 +12,13 @@
           рейтин: {{ props.rating.rate }}
         </div>
       </div>
-      <button class="products__button">Buy</button>
+      <button class="products__button" @click="() => setModal('m2', true)">Buy</button>
     </div>
   </li>
 </template>
 
 <script setup>
-const props = defineProps(['title', 'description', 'image', 'price', 'count', 'rating'])
+const props = defineProps(['title', 'description', 'image', 'price', 'count', 'rating', 'setModal'])
 </script>
 
 <style lang="scss" scoped>

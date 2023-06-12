@@ -5,19 +5,8 @@
     :animation="true"
     :draggable="true"
     title="Форма Добавление Товара"
-    :okButton="{
-      onclick: () => console.log(schema.errors),
-      // props.submitAddProduct(review),
-      loading: false,
-      text: 'Купить'
-    }"
-    footer="none"
-    :cancelButton="{
-      text: 'Отмена'
-    }"
-    :ok-disabled="true"
   >
-    <Form @submit="onSubmit()" :validation-schema="schema" v-slot="{ errors }">
+    <Form @submit="(e) => onSubmit(e)" :validation-schema="schema" v-slot="{ errors }">
       <div class="form-row">
         <div class="form-group col">
           <label>Категория</label>
@@ -27,7 +16,6 @@
             as="select"
             class="form-control"
             :class="{ 'is-invalid': errors.category }"
-            v-model="review.category"
           >
             <option disabled>Категория</option>
             <option value="men's clothing">men's clothing</option>
@@ -44,7 +32,6 @@
             name="title"
             type="text"
             class="form-control"
-            v-model="review.title"
             :class="{ 'is-invalid': errors.title }"
           />
           <div class="invalid-feedback">{{ errors.title }}</div>
@@ -58,7 +45,6 @@
             type="text"
             class="form-control"
             :class="{ 'is-invalid': errors.description }"
-            v-model="review.description"
           />
           <div class="invalid-feedback">{{ errors.description }}</div>
         </div>
@@ -71,7 +57,6 @@
             type="text"
             class="form-control"
             :class="{ 'is-invalid': errors.image }"
-            v-model="review.image"
           />
           <div class="invalid-feedback">{{ errors.image }}</div>
         </div>
@@ -81,10 +66,9 @@
           <Field
             placeholder="Введите цену"
             name="price"
-            type="text"
+            type="number"
             class="form-control"
             :class="{ 'is-invalid': errors.price }"
-            v-model="review.price"
           />
           <div class="invalid-feedback">{{ errors.price }}</div>
         </div>
@@ -94,10 +78,9 @@
           <Field
             placeholder="Введите Количество шт."
             name="count"
-            type="text"
+            type="number"
             class="form-control"
             :class="{ 'is-invalid': errors.count }"
-            v-model="review.rating.count"
           />
           <div class="invalid-feedback">{{ errors.count }}</div>
         </div>
@@ -108,7 +91,6 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
 import { v4 } from 'uuid'
 import { Modal } from 'usemodal-vue3'
 import * as Yup from 'yup'
@@ -125,23 +107,16 @@ const schema = Yup.object().shape({
   count: Yup.string().required('Введите количество')
 })
 
-const review = reactive({
-  category: '',
-  description: '',
-  id: v4(),
-  image: '',
-  price: null,
-  rating: { rate: 0, count: null },
-  title: ''
-})
-const onSubmit = () => {
-  props.submitAddProduct(review)
-  review.category = ''
-  review.description = ''
-  review.image = ''
-  review.price = null
-  review.title = ''
-  review.rating.count = null
+const onSubmit = (e) => {
+  props.submitAddProduct({
+    category: e.category,
+    description: e.description,
+    id: v4(),
+    image: e.image,
+    price: e.price,
+    rating: { rate: 0, count: e.count },
+    title: e.title
+  })
 }
 </script>
 

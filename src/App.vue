@@ -2,9 +2,10 @@
 import ProductList from './components/ProductList.vue'
 import MyHeader from './components/MyHeader.vue'
 import AddProduct from './components/AddProduct.vue'
+import PaymentProduct from './components/PaymentProduct.vue'
 import axios from './api/api'
 import { computed, ref, onBeforeMount, reactive } from 'vue'
-import { Modal, useModal } from 'usemodal-vue3'
+import { useModal } from 'usemodal-vue3'
 
 const products = ref({})
 const localStorageProducts = JSON.parse(localStorage.getItem('products'))
@@ -16,9 +17,9 @@ if (!localStorageProducts) {
 } else {
   products.value = localStorageProducts
 }
-const submitAddProduct = (newProduct) => {
+const submitProduct = (newProduct) => {
   products.value.push(newProduct)
-  localStorage.setItem('products', JSON.stringify(localStorageProducts))
+  localStorage.setItem('products', JSON.stringify(products.value))
   setModal('m1', false)
   axios
     .post('api/review', products, {
@@ -58,16 +59,10 @@ modalVisible2 = setModal('m2', false)
 </script>
 
 <template>
-  <my-header
-    :modelValue="query"
-    :setModal="setModal"
-    :modalVisible="modalVisible"
-    @update:modelValue="query = $event"
-  ></my-header>
+  <MyHeader :modelValue="query" :setModal="setModal" @update:modelValue="query = $event" />
   <input type="search" placeholder="Поиск продуктов..." v-model="query" />
-  <product-list :products="queryProducts"></product-list>
-  <add-product :submitAddProduct="submitAddProduct" :modalVisible="modalVisible"></add-product>
-  <Modal name="m2" v-model:visible="modalVisible2"> </Modal>
+  <ProductList :products="queryProducts" :setModal="setModal" />
+  <AddProduct :submitAddProduct="submitProduct" :modalVisible="modalVisible" />
+  <PaymentProduct :modalVisible="modalVisible2" :setModal="setModal" />
 </template>
-
 <style scoped lang="scss"></style>

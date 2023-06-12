@@ -1,6 +1,7 @@
 <template>
   <ul class="products">
-    <product-item
+    <ProductItem
+      :setModal="props.setModal"
       v-for="list in props.products"
       :key="list.id"
       :title="list.title"
@@ -8,13 +9,13 @@
       :image="list.image"
       :price="list.price"
       :rating="list.rating"
-    ></product-item>
+    />
   </ul>
 </template>
 
 <script setup>
 import ProductItem from './ProductItem.vue'
-const props = defineProps(['products'])
+const props = defineProps(['products', 'setModal'])
 </script>
 
 <style lang="scss" scoped>
