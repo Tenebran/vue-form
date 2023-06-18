@@ -108,15 +108,16 @@ const schema = Yup.object().shape({
 })
 
 const onSubmit = (e) => {
-  props.submitAddProduct({
-    category: e.category,
-    description: e.description,
-    id: v4(),
-    image: e.image,
-    price: e.price,
-    rating: { rate: 0, count: e.count },
-    title: e.title
-  })
+  console.log(e)
+  // props.submitAddProduct({
+  //   category: e.category,
+  //   description: e.description,
+  //   id: v4(),
+  //   image: e.image,
+  //   price: e.price,
+  //   rating: { rate: 0, count: e.count },
+  //   title: e.title
+  // })
 }
 </script>
 
