@@ -96,28 +96,27 @@ import { Modal } from 'usemodal-vue3'
 import * as Yup from 'yup'
 import { Form, Field } from 'vee-validate'
 
-const props = defineProps(['submitAddProduct', 'modalVisible'])
+const props = defineProps(['submitAddProduct', 'modalVisible', 'productsBuyDone'])
 
 const schema = Yup.object().shape({
   category: Yup.string().required('Нужно выбрать категорию'),
   title: Yup.string().required('Нужно ввести имя товара'),
   description: Yup.string().required('Нужно ввести описание товара'),
   image: Yup.string().required('Нужно вставить картинку'),
-  price: Yup.string().required('Нужно ввести цену'),
-  count: Yup.string().required('Введите количество')
+  price: Yup.number().required('Нужно ввести цену').min(1),
+  count: Yup.number().required('Введите количество').min(1)
 })
 
 const onSubmit = (e) => {
-  console.log(e)
-  // props.submitAddProduct({
-  //   category: e.category,
-  //   description: e.description,
-  //   id: v4(),
-  //   image: e.image,
-  //   price: e.price,
-  //   rating: { rate: 0, count: e.count },
-  //   title: e.title
-  // })
+  props.submitAddProduct({
+    id: v4(),
+    title: e.title,
+    price: e.price,
+    description: e.description,
+    category: e.category,
+    image: e.image,
+    rating: { rate: 0, count: e.count }
+  })
 }
 </script>
 

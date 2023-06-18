@@ -6,31 +6,46 @@ import PaymentProduct from './components/PaymentProduct.vue'
 import axios from './api/api'
 import { computed, ref, onBeforeMount, reactive } from 'vue'
 import { useModal } from 'usemodal-vue3'
+import { v4 } from 'uuid'
 
 const products = ref({})
-const localStorageProducts = JSON.parse(localStorage.getItem('products'))
-if (!localStorageProducts) {
-  onBeforeMount(async () => {
-    products.value = (await axios.get(`/products`)).data
-    localStorage.setItem('products', JSON.stringify(products.value))
-  })
-} else {
-  products.value = localStorageProducts
+const selectedProduct = ref({})
+const productsBuyDone = ref(false)
+
+const onClosePayment = () => {
+  productsBuyDone.value = false
+  setModal('m2', false)
 }
-const submitProduct = (newProduct) => {
-  products.value.push(newProduct)
-  localStorage.setItem('products', JSON.stringify(products.value))
-  setModal('m1', false)
+onBeforeMount(async () => {
+  products.value = (await axios.get(`/products`)).data
+})
+
+const onSelectProduct = (product) => {
+  selectedProduct.value = product
+  setModal('m2', true)
+}
+
+const onBuyProducts = (product) => {
   axios
-    .post('api/review', products, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+    .post('/paymentProducts', {
+      ...product,
+      id: v4(),
+      productsId: { id: selectedProduct.value.id }
     })
+    .then(() => {
+      productsBuyDone.value = true
+    })
+    .catch((err) => alert(err))
+}
+
+const submitProduct = (newProduct) => {
+  axios
+    .post('/products', newProduct)
     .then((res) => {
-      console.log(res)
+      setModal('m1', false)
+      products.value.push(res.data)
     })
-    .catch((err) => console.log(err))
+    .catch((err) => alert(err))
 }
 let modalVisible = reactive({})
 let modalVisible2 = reactive({})
@@ -61,8 +76,14 @@ modalVisible2 = setModal('m2', false)
 <template>
   <MyHeader :modelValue="query" :setModal="setModal" @update:modelValue="query = $event" />
   <input type="search" placeholder="Поиск продуктов..." v-model="query" />
-  <ProductList :products="queryProducts" :setModal="setModal" />
+  <ProductList :products="queryProducts" :onSelectProduct="onSelectProduct" />
   <AddProduct :submitAddProduct="submitProduct" :modalVisible="modalVisible" />
-  <PaymentProduct :modalVisible="modalVisible2" :setModal="setModal" />
+  <PaymentProduct
+    :modalVisible="modalVisible2"
+    :setModal="setModal"
+    :productsBuyDone="productsBuyDone"
+    :onBuyProducts="onBuyProducts"
+    :onClosePayment="onClosePayment"
+  />
 </template>
 <style scoped lang="scss"></style>

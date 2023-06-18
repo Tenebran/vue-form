@@ -1,7 +1,7 @@
 <template>
   <ul class="products">
     <ProductItem
-      :setModal="props.setModal"
+      :onSelectProduct="props.onSelectProduct"
       v-for="list in props.products"
       :key="list.id"
       :title="list.title"
@@ -15,7 +15,7 @@
 
 <script setup>
 import ProductItem from './ProductItem.vue'
-const props = defineProps(['products', 'setModal'])
+const props = defineProps(['products', 'onSelectProduct'])
 </script>
 
 <style lang="scss" scoped>

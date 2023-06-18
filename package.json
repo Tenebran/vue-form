@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
+    "json-server": "^0.17.3",
     "usemodal-vue3": "^0.3.7",
     "uuid": "^9.0.0",
     "vee-validate": "^4.9.6",

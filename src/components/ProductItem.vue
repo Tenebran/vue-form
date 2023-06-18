@@ -12,13 +12,21 @@
           рейтин: {{ props.rating.rate }}
         </div>
       </div>
-      <button class="products__button" @click="() => setModal('m2', true)">Buy</button>
+      <button class="products__button" @click="() => onSelectProduct({ id: 1 })">Buy</button>
     </div>
   </li>
 </template>
 
 <script setup>
-const props = defineProps(['title', 'description', 'image', 'price', 'count', 'rating', 'setModal'])
+const props = defineProps([
+  'title',
+  'description',
+  'image',
+  'price',
+  'count',
+  'rating',
+  'onSelectProduct'
+])
 </script>
 
 <style lang="scss" scoped>

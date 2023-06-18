@@ -1,12 +1,19 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <Modal
     name="m2"
     v-model:visible="props.modalVisible"
     :animation="true"
     :draggable="true"
+    :closable="false"
     title="Форма Покупки Товара"
   >
-    <Form @submit="(e) => onSubmit(e)" :validation-schema="schema" v-slot="{ errors }">
+    <Form
+      v-if="!props.productsBuyDone"
+      @submit="(e) => props.onBuyProducts(e)"
+      :validation-schema="schema"
+      v-slot="{ errors }"
+    >
       <div class="form-row">
         <div class="form-group col">
           <label>Title</label>
@@ -123,11 +130,32 @@
         </div>
       </div>
 
+      <div class="form-group form-check" style="margin: 20px 0">
+        <Field
+          name="acceptTerms"
+          type="checkbox"
+          id="acceptTerms"
+          value="true"
+          class="form-check-input"
+          :class="{ 'is-invalid': errors.acceptTerms }"
+          style="max-width: 20px; max-height: 20px; border-radius: 100%; padding: 10px"
+        />
+        <label for="acceptTerms" class="form-check-label">Accept Terms & Conditions</label>
+        <div class="invalid-feedback">{{ errors.acceptTerms }}</div>
+      </div>
+
       <div class="form-group">
         <button type="submit" class="btn btn-primary mr-2">Купить</button>
         <button type="reset" class="btn btn-secondary">Сброс</button>
+        <button type="reset" class="btn btn-secondary">Закрыть</button>
       </div>
     </Form>
+    <div v-else-if="!!props.productsBuyDone" class="success__payment">
+      <div class="success__payment_title">
+        Thanks For Payment
+        <button class="btn btn-primary mr-2" @click="props.onClosePayment">Закрыть Окно</button>
+      </div>
+    </div>
   </Modal>
 </template>
 
@@ -136,9 +164,14 @@ import { Modal } from 'usemodal-vue3'
 import * as Yup from 'yup'
 import { Form, Field } from 'vee-validate'
 
-const props = defineProps(['modalVisible', 'setModal'])
+const props = defineProps([
+  'modalVisible',
+  'setModal',
+  'onBuyProducts',
+  'productsBuyDone',
+  'onClosePayment'
+])
 const fullYear = new Date().getFullYear()
-
 const brithDate = (year) =>
   `${fullYear - year}-${
     new Date().getMonth() < 10 ? '0' + (new Date().getMonth() + 1) : new Date().getMonth() + 1
@@ -163,22 +196,8 @@ const schema = Yup.object().shape({
     .min(fullYear + 0)
     .max(fullYear + 8)
     .required(),
-  expiryYear: Yup.string().label('Expiry year').required(),
   acceptTerms: Yup.string().required('Accept Ts & Cs is required')
 })
-const onSubmit = (e) => {
-  console.log(e)
-  // props.submitAddProduct({
-  //   category: e.category,
-  //   description: e.description,
-  //   id: v4(),
-  //   image: e.image,
-  //   price: e.price,
-  //   rating: { rate: 0, count: e.count },
-  //   title: e.title
-  // }),
-  // props.setModal('m2', false)
-}
 </script>
 
 <style lang="scss" scoped>
@@ -199,5 +218,20 @@ div.modal-vue3-footer {
 
 .form-check-input {
   width: 10px;
+}
+.success__payment {
+  background-color: rgb(199, 236, 143);
+  height: 500px;
+  &_title {
+    font-size: 20px;
+    color: rgb(14, 10, 10);
+    font-weight: 800;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 }
 </style>
